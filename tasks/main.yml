@@ -1,2 +1,22 @@
 ---
-# tasks file for findit
+- name: include os-specific vars
+  include_vars: "{{ansible_os_family}}.yml"
+  tags: findit_os_vars
+
+- name: install os-specific prereqs
+  include: "{{ansible_os_family}}_prereqs.yml"
+  tags: findit_os_prereqs
+  become: true
+
+- include: 'user.yml'
+  tags: findit_user
+  become: true
+
+- include: 'install.yml'
+  tags: findit_install
+
+- include: 'build.yml'
+  tags: findit_build
+
+- include: 'configure.yml'
+  tags: findit_configure

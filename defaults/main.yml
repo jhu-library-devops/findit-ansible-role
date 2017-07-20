@@ -1,4 +1,33 @@
 ---
-# defaults file for findit
+# findit default variables
+findit_app_name:         "{{ app_name         | default('findit') }}"
+findit_app_user:         "{{ app_user         | default(findit_app_name) }}"
+findit_base_dir:         "{{ base_dir         | default('/opt/apps') }}"
+findit_dir:              "{{findit_base_dir}}/{{findit_app_user}}"
+findit_repo:             "{{ repo             | default('git@github.com:jhu-sheridan-libraries/umlaut_jh.git') }}"
+findit_app_environment:  "{{ rails_env | default('production') }}"
 
+# umlaut databases 
+findit_db_provider:      "{{ db_provider     | default('mysql2') }}"
+findit_db_encoding:      "{{ db_encoding     | default('utf8') }}"
+findit_db_pool:          "{{ db_pool         | default(5) }}"
+findit_db_reconnect:     "{{ db_reconnect    | default(false) }}"
+findit_db_timeout:       "{{ db_timeout      | default(5000) }}"
+findit_db_host:          "{{ db_host         | default('db.local') }}"
+findit_db_port:          "{{ db_port         | default(3306) }}"
+findit_db_name:          "{{ db_name         | default('umlaut3_' + rails_env) }}"
+findit_db_user:          "{{ db_user         | default('findit') }}"
+findit_db_pass:          "{{ db_pass         | default('findit_isnt_a_good_pasword') }}"
+
+# sfx database
+sfx_db_provider:         "{{ db_provider     | default('mysql2') }}"
+sfx_db_encoding:         "{{ db_encoding     | default('utf8') }}"
+sfx_db_pool:             "{{ db_pool         | default(5) }}"
+sfx_db_reconnect:        "{{ db_reconnect    | default(false) }}"
+sfx_db_timeout:          "{{ db_timeout      | default(5000) }}"
+sfx_db_host:             "{{ db_host         | default('sfx.local') }}"
+sfx_db_port:             "{{ db_port         | default(3310) }}"
+sfx_db_name:             "{{ db_name         | default('sfxtst41') }}"
+sfx_db_user:             "{{ db_user         | default('sfx_ro') }}"
+sfx_db_pass:             "{{ db_pass         | default('sfx_isnt_a_good_pasword') }}"
 

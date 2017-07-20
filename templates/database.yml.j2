@@ -1,0 +1,21 @@
+{{ rails_env }}:
+  adapter:   {{ findit_db_provider }}
+  encoding:  {{ findit_db_encoding }}
+  pool:      {{ findit_db_pool }}
+  reconnect: {{ findit_db_reconnect }}
+  timeout:   {{ findit_db_timeout }}
+  host:      {{ findit_db_host }}
+  port:      {{ findit_db_port }}
+  database:  {{ findit_db_name }}
+  username:  {{ findit_db_user }}
+  password:  {{ findit_db_pass }}
+
+sfx_db:
+  adapter:   {{ sfx_db_provider }}
+  encoding:  {{ sfx_db_encoding }}
+  pool:      {{ sfx_db_pool }}
+  host:      {{ sfx_db_host }}
+  port:      {{ sfx_db_port }}
+  database:  {{ sfx_db_name }}
+  username:  {{ sfx_db_user }}
+  password:  {{ sfx_db_pass }} 

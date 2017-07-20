@@ -1,0 +1,27 @@
+---
+- name: install epel repo
+  yum: name=epel-release state=present
+
+- name: install prereqs - RedHat
+  yum: name={{ item }} state=present
+  with_items:
+    - nodejs
+    - git
+    - policycoreutils-python
+    - libselinux-python
+    - gcc
+    - sqlite-devel
+    - mariadb-devel
+    - gcc-c++
+    - libstdc++-devel
+    - libxslt-devel
+    - libxml2-devel
+
+#    - sqlite-devel    # gem rails
+#    - mysql-devel     # gem mydql2
+#    - gcc-c++         # gem unf_ext
+#    - libstdc++-devel # gem unf_ext
+#    - libxslt-devel   # gem nokogiri
+#    - libxml2-devel   # gem nokogiri, bundle config build.nokogiri --use-system-libraries
+#    # - ruby-devel
+ 

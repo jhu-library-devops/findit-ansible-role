@@ -1,0 +1,55 @@
+---
+
+- name: "Create user"
+  become: true
+  user:
+    name:     "{{ findit_app_user }}"
+    append:   yes
+    state:    present
+    createhome : yes
+
+- name : "Add authorized keys"
+  become: true
+  authorized_key:
+    user : "{{ findit_app_user }}"
+    key  : "{{ item }}"
+  with_file : "{{ ssh_pub_keys }}"
+  no_log: true
+
+- name: "Ensure .ssh dir exists"
+  file:
+    dest: "/home/{{ findit_app_user }}/.ssh"
+    mode: 0700
+    owner: "{{ findit_app_user }}"
+    state: directory
+
+- name: "Install user ssh private key"
+  no_log: true
+  copy:
+    content: "{{ findit_app_user_ssh_private_key }}"
+    dest: "/home/{{ findit_app_user }}/.ssh/id_rsa"
+    mode: 0600
+    owner: "{{ findit_app_user }}"
+
+- name: "Install user ssh public key"
+  no_log: true
+  copy:
+    content: "{{ findit_app_user_ssh_public_key }}"
+    dest: "/home/{{ findit_app_user }}/.ssh/id_rsa.pub"
+    mode: 0600
+    owner: "{{ findit_app_user }}"
+
+
+- name: "Set user git name"
+  become_user: "{{ findit_app_user }}"
+  git_config:
+    name: user.email
+    scope: global
+    value: "{{ findit_app_user }}@{{ ansible_fqdn }}"
+
+- name: "Set user git name"
+  become_user: "{{ findit_app_user }}"
+  git_config:
+    name: user.name
+    scope: global
+    value: "Findit User"

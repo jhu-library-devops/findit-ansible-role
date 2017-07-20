@@ -1,0 +1,9 @@
+---
+# TODO using SHELL with -l, two commands in one line, would like to break into to tasks
+# but I have issues with not recognising the first config
+- name: "configure and build"
+  shell: bash -lc "bundle config build.nokogiri --use-system-libraries &&  bundle install --path vendor/bundle"
+  args:
+    chdir: "{{findit_dir}}"
+  notify: restart apache
+

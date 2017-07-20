@@ -1,0 +1,59 @@
+---
+- name: "Ensure github.com is a known host"
+  become_user: "{{ findit_app_user }}"
+  lineinfile:
+    dest: "/home/{{ findit_app_user }}/.ssh/known_hosts"
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
+
+- name : "Check base dir exists"
+  stat :
+    path: "{{ findit_base_dir }}"
+  register : reg_base_dir
+
+- name: "Create base dir"
+  become: true
+  file:
+    dest: "{{ findit_base_dir }}"
+    owner: "{{ findit_app_user }}"
+    group: "{{ findit_app_user }}"
+    state: directory
+    mode: 0775
+  when: reg_base_dir.stat.exists == False
+
+- name : "Check app dir"
+  stat :
+    path: "{{ findit_dir }}"
+  register : reg_app_dir
+
+  # TODO Using the shell, but would like to replace with the git module
+- name: "SHELL Checkout findit"
+  become_user: "{{ findit_app_user }}"
+  shell: git clone "{{ findit_repo }}" "{{ findit_dir }}"
+  args:
+    creates: "{{ findit_dir }}"
+  when: reg_app_dir.stat.exists == False
+
+- name: "Install Bundler"
+  become_user: "{{ findit_app_user }}"
+  gem:
+    name: bundler 
+    state: latest
+
+- name : "Check tmp dir exists"
+  stat :
+    path: "{{ findit_dir }}/tmp"
+  register : reg_tmp_dir
+
+- name: "Create apps tmp dir"
+  become: true
+  file:
+    dest: "{{ findit_dir }}/tmp"
+    owner: "{{ findit_app_user }}"
+    group: "{{ findit_app_user }}"
+    state: directory
+    mode: 0775
+  when: reg_tmp_dir.stat.exists == False
+
