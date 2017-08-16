@@ -1,13 +1,4 @@
 ---
-- name: "Ensure github.com is a known host"
-  become_user: "{{ findit_app_user }}"
-  lineinfile:
-    dest: "/home/{{ findit_app_user }}/.ssh/known_hosts"
-    create: yes
-    state: present
-    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
-    regexp: "^github\\.com"
-
 - name : "Check base dir exists"
   stat :
     path: "{{ findit_base_dir }}"
@@ -28,13 +19,14 @@
     path: "{{ findit_dir }}"
   register : reg_app_dir
 
-  # TODO Using the shell, but would like to replace with the git module
-- name: "SHELL Checkout findit"
+- name: get application from repo
   become_user: "{{ findit_app_user }}"
-  shell: git clone "{{ findit_repo }}" "{{ findit_dir }}"
-  args:
-    creates: "{{ findit_dir }}"
-  when: reg_app_dir.stat.exists == False
+  git:
+    repo: "{{ findit_repo }}"
+    dest: "{{ findit_dir }}"
+    version: "{{ app_branch | default('HEAD') }}"
+    key_file: "{{ deploy_key_full_path }}"
+    ssh_opts: "-o StrictHostKeyChecking=no"
 
 - name: "Install Bundler"
   become_user: "{{ findit_app_user }}"
