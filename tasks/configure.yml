@@ -1,7 +1,13 @@
 ---
 - name: Configure database
-  #  no_log: true
+  no_log: true
   template:
     src     :  "templates/dotenv.j2"
     dest    :  "{{findit_dir}}/.env"
   notify: restart apache
+
+- name: precompile assets
+  command: bash -lc "bundle exec rake assets:precompile"
+  args:
+    chdir: "{{ deploy_dir }}"
+  when: rails_env == "production"
