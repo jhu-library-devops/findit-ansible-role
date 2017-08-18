@@ -11,3 +11,4 @@
   args:
     chdir: "{{ findit_dir }}"
   when: rails_env == "production"
+  notify: restart apache
