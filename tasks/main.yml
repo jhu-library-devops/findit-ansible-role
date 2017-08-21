@@ -15,11 +15,6 @@
 - include: 'install.yml'
   tags: findit_install
 
-
 - include: 'build.yml'
   tags: findit_build
-  become_user: "{{ findit_app_user }}"
 
-- include: 'configure.yml'
-  tags: findit_configure
-  become_user: "{{ findit_app_user }}"
