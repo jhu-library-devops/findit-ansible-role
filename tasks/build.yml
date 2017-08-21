@@ -1,9 +1,45 @@
 ---
 # TODO using SHELL with -l, two commands in one line, would like to break into to tasks
 # but I have issues with not recognising the first config
-- name: "configure and build"
-  shell: bash -lc "bundle config build.nokogiri --use-system-libraries &&  bundle install --path vendor/bundle"
+- name: configure bundler
+  shell: bash -lc "bundle config build.nokogiri --use-system-libraries"
   args:
-    chdir: "{{findit_dir}}"
+    chdir: "{{findit_app_dir}}"
+    #become_user: "{{ findit_app_user }}"
   notify: restart apache
 
+- name: install the project's gems for deployment
+  bundler:
+    chdir: "{{ findit_app_dir }}"
+    gem_path: "vendor/bundle"
+    deployment_mode: true
+    #TODO CANNOT GET bindle to install as app_user
+    # ALLWAYS RUNS AS deploy
+    # become_user: "{{ findit_app_user }}"
+
+- name: configure rails
+  no_log: true
+  template:
+    src     :  "templates/dotenv.j2"
+    dest    :  "{{ findit_app_dir }}/.env"
+    mode    :  "u=r,g=,o="
+  notify: restart apache
+
+- name: set ownership of findit dir and contents
+  file:
+    path: "{{ findit_app_dir }}"
+    owner: "{{ findit_app_user }}"
+    group: "{{ findit_app_group }}"
+    state: directory
+    recurse: true
+  become: true
+  notify: restart apache
+
+- name: "Create apps tmp dir"
+  file:
+    dest: "{{ findit_app_dir }}/tmp"
+    owner: "{{ findit_app_user }}"
+    group: "{{ findit_app_group }}"
+    state: directory
+    mode: 0775
+  become: true
