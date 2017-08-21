@@ -1,51 +1,23 @@
 ---
-- name : "Check base dir exists"
-  stat :
-    path: "{{ findit_base_dir }}"
-  register : reg_base_dir
-
-- name: "Create base dir"
-  become: true
+- name: make sure deploy dir exists
   file:
-    dest: "{{ findit_base_dir }}"
-    owner: "{{ findit_app_user }}"
-    group: "{{ findit_app_user }}"
+    path: "{{ findit_app_dir }}"
+    owner: "{{ deploy_user }}"
     state: directory
-    mode: 0775
-  when: reg_base_dir.stat.exists == False
-
-- name : "Check app dir"
-  stat :
-    path: "{{ findit_dir }}"
-  register : reg_app_dir
+    recurse: true
+  become: true
 
 - name: get application from repo
-  become_user: "{{ findit_app_user }}"
   git:
-    repo: "{{ findit_repo }}"
-    dest: "{{ findit_dir }}"
-    version: "{{ app_branch | default('HEAD') }}"
+    repo: "{{ findit_app_repo }}"
+    dest: "{{ findit_app_dir }}"
+    version: "{{ findit_app_branch | default('HEAD') }}"
     key_file: "{{ deploy_key_full_path }}"
     ssh_opts: "-o StrictHostKeyChecking=no"
 
 - name: "Install Bundler"
-  become_user: "{{ findit_app_user }}"
   gem:
     name: bundler 
     state: latest
-
-- name : "Check tmp dir exists"
-  stat :
-    path: "{{ findit_dir }}/tmp"
-  register : reg_tmp_dir
-
-- name: "Create apps tmp dir"
-  become: true
-  file:
-    dest: "{{ findit_dir }}/tmp"
-    owner: "{{ findit_app_user }}"
-    group: "{{ findit_app_user }}"
-    state: directory
-    mode: 0775
-  when: reg_tmp_dir.stat.exists == False
-
+  notify: restart apache
+  become_user: "{{ findit_app_user }}"
