@@ -2,9 +2,10 @@
 # findit default variables
 findit_app_name:         "{{ app_name         | default('findit') }}"
 findit_app_user:         "{{ app_user         | default(findit_app_name) }}"
-findit_base_dir:         "{{ base_dir         | default('/opt/apps') }}"
-findit_dir:              "{{findit_base_dir}}/{{findit_app_user}}"
-findit_repo:             "{{ repo             | default('git@github.com:jhu-sheridan-libraries/umlaut_jh.git') }}"
+findit_app_group:        "{{ app_group        | default(findit_app_name) }}"
+findit_base_dir:         "{{ base_dir         | default('/opt') }}"
+findit_app_dir:          "{{ findit_base_dir}}/{{findit_app_user}}"
+findit_app_repo:         "{{ app_repo         | default('git@github.com:jhu-sheridan-libraries/umlaut_jh.git') }}"
 findit_app_environment:  "{{ rails_env | default('production') }}"
 
 # umlaut databases 
