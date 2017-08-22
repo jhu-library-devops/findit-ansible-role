@@ -25,6 +25,12 @@
     mode    :  "u=r,g=,o="
   notify: restart apache
 
+- name: precompile assets
+  command: bash -lc "bundle exec rake assets:precompile"
+  args:
+  ¦ chdir: "{{ findit_dir }}"
+  when: rails_env == "{{ findit_app_environment }}"
+
 - name: set ownership of findit dir and contents
   file:
     path: "{{ findit_app_dir }}"
