@@ -30,6 +30,7 @@
   args:
     chdir: "{{ findit_app_dir }}"
   when: rails_env == "{{ findit_app_environment }}"
+  notify: restart apache
 
 - name: set ownership of findit dir and contents
   file:
