@@ -26,7 +26,7 @@
   notify: restart apache
 
 - name: precompile assets
-  command: bash -lc "bundle exec rake assets:precompile"
+  command: bash -lc "RAILS_ENV={{ findit_app_environment }} bundle exec rake assets:precompile"
   args:
     chdir: "{{ findit_app_dir }}"
   when: rails_env == "{{ findit_app_environment }}"
