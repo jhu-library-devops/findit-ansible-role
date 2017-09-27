@@ -2,12 +2,17 @@
 - name: install epel repo
   yum: name=epel-release state=present
 
-- name: install prereqs - RedHat
+- name: install version dependent prereqs - RedHat
   yum: name={{ item }} state=present
   with_items:
     # BUG: Temp fix install from rpm:  http-parser remvoved from EPEL to RHEL7.4
     # see https://bugs.centos.org/view.php?id=13669&nbn=1
     - 'https://kojipkgs.fedoraproject.org/packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm'
+  when: "{{ ansible_distribution_version | version_compare('7.4', operator='lt' ) }}"
+
+- name: install prereqs - RedHat
+  yum: name={{ item }} state=present
+  with_items:
     - nodejs
     - git
     - policycoreutils-python
@@ -19,11 +24,3 @@
     - libstdc++-devel
     - libxslt-devel
     - libxml2-devel
-
-#    - sqlite-devel    # gem rails
-#    - mysql-devel     # gem mydql2
-#    - gcc-c++         # gem unf_ext
-#    - libstdc++-devel # gem unf_ext
-#    - libxslt-devel   # gem nokogiri
-#    - libxml2-devel   # gem nokogiri, bundle config build.nokogiri --use-system-libraries
-#    # - ruby-devel
