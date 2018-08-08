@@ -17,6 +17,7 @@
   no_log: true
 
 - name: "Ensure .ssh dir exists"
+  become: yes
   file:
     dest: "/home/{{ findit_app_user }}/.ssh"
     mode: 0700
