@@ -1,7 +1,7 @@
 ---
 
 - name: "Create user"
-  become: true
+  become: yes 
   user:
     name:     "{{ findit_app_user }}"
     append:   yes
@@ -9,7 +9,7 @@
     createhome : yes
 
 - name : "Add authorized keys"
-  become: true
+  become: yes 
   authorized_key:
     user : "{{ findit_app_user }}"
     key  : "{{ item }}"
@@ -42,12 +42,14 @@
 
 - name: "Set user git name"
   become_user: "{{ findit_app_user }}"
+  become: yes 
   git_config:
     name: user.email
     scope: global
     value: "{{ findit_app_user }}@{{ ansible_fqdn }}"
 
 - name: "Set user git name"
+  become: yes 
   become_user: "{{ findit_app_user }}"
   git_config:
     name: user.name
