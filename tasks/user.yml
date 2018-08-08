@@ -1,7 +1,7 @@
 ---
 
 - name: "Create user"
-  become: yes 
+  become: yes
   user:
     name:     "{{ findit_app_user }}"
     append:   yes
@@ -9,7 +9,7 @@
     createhome : yes
 
 - name : "Add authorized keys"
-  become: yes 
+  become: yes
   authorized_key:
     user : "{{ findit_app_user }}"
     key  : "{{ item }}"
