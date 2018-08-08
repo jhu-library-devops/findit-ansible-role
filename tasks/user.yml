@@ -17,6 +17,7 @@
   no_log: true
 
 - name: "Ensure .ssh dir exists"
+  become: yes
   file:
     dest: "/home/{{ findit_app_user }}/.ssh"
     mode: 0700
@@ -24,6 +25,7 @@
     state: directory
 
 - name: "Install user ssh private key"
+  become: yes
   no_log: true
   copy:
     content: "{{ findit_app_user_ssh_private_key }}"
@@ -32,6 +34,7 @@
     owner: "{{ findit_app_user }}"
 
 - name: "Install user ssh public key"
+  become: yes
   no_log: true
   copy:
     content: "{{ findit_app_user_ssh_public_key }}"
