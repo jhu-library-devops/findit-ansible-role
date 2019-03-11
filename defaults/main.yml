@@ -9,6 +9,12 @@ findit_app_repo:         "{{ app_repo         | default('git@github.com:jhu-sher
 findit_app_branch:       "{{ app_branch       | default('master') }}"
 findit_app_environment:  "{{ rails_env | default('production') }}"
 
+findit_cron_minute:              0
+findit_cron_hour:                0
+findit_cron_weekday:             "*"
+findit_cron_command:             "cat /proc/meminfo >> {{ log_file }}"
+findit_cron_action:              "create" # create | remove | none
+
 # umlaut databases 
 findit_db_provider:      "{{ db_provider     | default('mysql2') }}"
 findit_db_encoding:      "{{ db_encoding     | default('utf8') }}"

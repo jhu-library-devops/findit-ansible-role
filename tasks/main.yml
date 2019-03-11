@@ -1,18 +1,20 @@
 ---
 - name: include os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
-  tags: findit_os_vars
+  tags: 'findit_os_vars'
 
 - name: install os-specific prereqs
   include: "{{ansible_os_family}}_prereqs.yml"
-  tags: findit_os_prereqs
+  tags: 'findit_os_prereqs'
 
 - include: 'user.yml'
-  tags: findit_user
+  tags: 'findit_user'
 
 - include: 'install.yml'
-  tags: findit_install
+  tags: 'findit_install'
 
 - include: 'build.yml'
-  tags: findit_build
+  tags: 'findit_build'
 
+- include: 'cron.yml'
+  tags: 'findit_cron'

@@ -1,0 +1,21 @@
+---
+- name: set cron state present
+  set_fact:
+    cron_state: present
+
+- name: set cron state absent
+  set_fact:
+    cron_state: absent
+  when: findit_cron_action == "remove"
+
+- name: create a cron file under /etc/cron.d
+  cron:
+    name:       "{{ findit_app_name }}"
+    minute:     "{{ findit_cron_minute }}"
+    hour:       "{{ findit_cron_hour }}"
+    weekday:    "{{ findit_cron_weekday }}"
+    user:       "{{ findit_app_user }}"
+    job:        "{{ findit_cron_command }}"
+    cron_file:  "{{ findit_app_name }}"
+    state:      "{{ cron_state }}"
+  become: true
